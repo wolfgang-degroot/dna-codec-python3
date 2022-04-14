@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Encode or decode any string or file to a sequence of DNA, and vice versa"""
+"""Encode or decode any string or UTF-8 encoded file to a sequence of DNA, and vice versa"""
 import sys
 
 __author__ = "Wolfgang de Groot"
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 __license__ = "MIT"
 
 # * Encoders
@@ -96,8 +96,8 @@ def main():
 		data = input("Input a UTF-8 string to encode into DNA: > ")
 		flag = {"string": True, "decode": False, "strict": False}
 	else:
-		flag = flags()
 		data = sys.argv[1]
+		flag = flags()
 
 	if flag["string"]:
 		if flag["decode"]:
