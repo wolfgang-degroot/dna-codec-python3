@@ -3,7 +3,7 @@
 import sys
 
 __author__ = "Wolfgang de Groot"
-__version__ = "1.0.2"
+__version__ = "1.0.1"
 __license__ = "MIT"
 
 # * Encoders
@@ -68,7 +68,7 @@ def help() -> None:
 
 
 def main():
-	flag = {"decode": False, "string": True}
+	flag = {"decode": False, "string": True, "hex": False, "strict": False}
 	if len(sys.argv) == 1:
 		# ? No arguments given.
 		data = input("Input a string to encode into DNA: > ")
@@ -84,8 +84,8 @@ def main():
 			flag["decode"]	= False	if arg == "--encode" else flag["decode"]  # *
 			flag["string"]	= False	if arg == "--file"	 else flag["string"]
 			flag["string"]	= True	if arg == "--string" else flag["string"]  # *
-			flag["hex"]		= True	if arg == "--hex"	 else False
-			flag["strict"]	= True	if arg == "--strict" else False
+			flag["hex"]		= True	if arg == "--hex"	 else flag["hex"]
+			flag["strict"]	= True	if arg == "--strict" else flag["strict"]
 
 	# * Execution
 	if flag["string"]:
