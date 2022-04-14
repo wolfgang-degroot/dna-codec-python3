@@ -3,7 +3,7 @@
 import sys
 
 __author__ = "Wolfgang de Groot"
-__version__ = "1.2.1"
+__version__ = "1.2.2"
 __license__ = "MIT"
 
 # * Encoders
@@ -61,7 +61,6 @@ def clean(input: str, strict: bool = False) -> str:
 		elif strict:
 			output += "A"
 	output += "A" * (4 - len(output) % 4)
-	print(output)
 	return output
 
 def help() -> None:
