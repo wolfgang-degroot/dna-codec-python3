@@ -3,7 +3,7 @@
 import sys
 
 __author__ = "Wolfgang de Groot"
-__version__ = "1.0.4"
+__version__ = "1.0.5"
 __license__ = "MIT"
 
 # * Encoders
@@ -59,7 +59,6 @@ def help() -> None:
 	print("\t--decode: -- decode DNA to string")
 	print("\t--string: -- Use a string as input  [default]")
 	print("\t--file: ---- Use a file instead of a string")
-	print("\t--hex: ----- The data input is hexidecimal")
 	print("\t--strict: -- Do not pad the input if characters are missing")
 	print("\t--help: ---- Print this help message")
 	print("Example: %s \"Biology is actually my least favorite subject\" --encode --string"%self)
@@ -68,7 +67,7 @@ def help() -> None:
 
 
 def main():
-	flag = {"decode": False, "string": True, "hex": False, "strict": False}
+	flag = {"decode": False, "string": True, "strict": False}
 	if len(sys.argv) == 1:
 		# ? No arguments given.
 		data = input("Input a string to encode into DNA: > ")
@@ -84,7 +83,6 @@ def main():
 			flag["decode"]	= False	if arg == "--encode" else flag["decode"]  # *
 			flag["string"]	= False	if arg == "--file"	 else flag["string"]
 			flag["string"]	= True	if arg == "--string" else flag["string"]  # *
-			flag["hex"]		= True	if arg == "--hex"	 else flag["hex"]
 			flag["strict"]	= True	if arg == "--strict" else flag["strict"]
 
 	# * Execution
@@ -101,10 +99,10 @@ def main():
 		cleaned = "".join([i for i in payload if i in "ACGT"])
 		# ! Pad strings that are too short if --strict is not used
 		cleaned += "A" * (4 - len(cleaned) % 4) if not flag["strict"] else ""
-		print(dna_to_hex(cleaned) if flag["hex"] else dna_to_str(cleaned))
+		print(dna_to_str(cleaned))
 	else:
 		# ? Encoding
-		print(hex_to_dna(payload) if flag["hex"] else str_to_dna(payload))
+		print(str_to_dna(payload))
 
 if __name__ == "__main__":
 	sys.exit(main())
