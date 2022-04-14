@@ -3,7 +3,7 @@
 import sys
 
 __author__ = "Wolfgang de Groot"
-__version__ = "1.0.1"
+__version__ = "1.0.3"
 __license__ = "MIT"
 
 # * Encoders
@@ -92,7 +92,10 @@ def main():
 		payload = data
 	else:
 		with open(data, "r") as file:
-			payload = file.read().replace("\n", "")
+			try:
+				payload = file.read().replace("\n", "")
+			except UnicodeDecodeError:
+				sys.exit("Invalid file encoding. Only UTF-8 is supported.")
 	if flag["decode"]:
 		# ? Decoding
 		cleaned = "".join([i for i in payload if i in "ACGT"])

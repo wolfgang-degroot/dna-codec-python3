@@ -10,7 +10,7 @@ dna-codec.py <input> <args>
 | --encode	| *Encode*				| **Yes**	|
 | --decode	| *Decode*				|	No		|
 | --string	| **Input a *string***	| **Yes**	|
-| --file	| Input a *file*		|	No		|
+| --file	| Input a UTF-8 *file*	|	No		|
 | --hex		| Use hexidecimal data	|	No		|
 | --strict	| Don't fix bad data	|	No		|
 | --help	| Display some help		|	No		|
