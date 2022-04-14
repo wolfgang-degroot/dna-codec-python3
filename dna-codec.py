@@ -3,7 +3,7 @@
 import sys
 
 __author__ = "Wolfgang de Groot"
-__version__ = "1.1.1"
+__version__ = "1.2.0"
 __license__ = "MIT"
 
 # * Encoders
@@ -22,9 +22,9 @@ def hex_to_dna(hex: hex) -> str:
 	return dna
 
 
-def str_to_dna(s: str) -> str:
+def str_to_dna(s: str, codec: str = "utf_8") -> str:
 	"""Encodes a string to DNA"""
-	hex = s.encode("utf_8").hex()
+	hex = s.encode(codec).hex()
 	return hex_to_dna(hex)
 
 # * Decoders
@@ -41,14 +41,14 @@ def dna_to_hex(dna: str) -> hex:
 	return hex(int(base4, 4)) if base4 != "" else "0"
 
 
-def dna_to_str(dna: str) -> str:
+def dna_to_str(dna: str, codec: str = "utf_8") -> str:
 	"""Decodes DNA back to a string"""
 	hex = dna_to_hex(dna)
 	try:
 		byte = bytes.fromhex(hex[2:])
 	except ValueError:
 		sys.exit("Incomplete input.")
-	return byte.decode("utf_8", "ignore")
+	return byte.decode(codec, "ignore")
 
 # * Function
 
@@ -67,19 +67,20 @@ def clean(input: str, strict: bool = False) -> str:
 def help() -> None:
 	self = sys.argv[0]
 	print("Usage: %s <input> <args>"%self)
-	print("\t--encode: -- encode string to DNA [default]")
-	print("\t--decode: -- decode DNA to string")
-	print("\t--string: -- Use a string as input  [default]")
-	print("\t--file: ---- Use a file instead of a string")
-	print("\t--strict: -- Pad invalid characters when decoding rather than skipping")
-	print("\t--help: ---- Print this help message")
+	print("\t--encode --------- encode string to DNA [default]")
+	print("\t--decode --------- decode DNA to string")
+	print("\t--codec:<codec> -- Set which standard encoder to use")
+	print("\t--string --------- Use a string as input  [default]")
+	print("\t--file ----------- Use a file instead of a string")
+	print("\t--strict --------- Pad invalid characters when decoding rather than skipping")
+	print("\t--help ----------- Print this help message")
 	print("Example: %s \"Biology is actually my least favorite subject\" --encode --string"%self)
 	print("Example: %s input.txt --encode --file"%self)
 	print("Example: %s CAGACGCCCGTACGTACGTTAGAC --decode --string"%self)
 
 def flags() -> tuple:
 	"""Returns a tuple of flags"""
-	flag = {"decode": False, "string": True, "strict": False}
+	flag = {"decode": False, "string": True, "strict": False, "codec": "utf_8"}
 	for arg in sys.argv[1:]:
 		sys.exit(help()) if arg == "--help" else None
 		flag["decode"]	= True	if arg == "--decode" else flag["decode"]
@@ -87,6 +88,15 @@ def flags() -> tuple:
 		flag["string"]	= False	if arg == "--file"	 else flag["string"]
 		flag["string"]	= True	if arg == "--string" else flag["string"]  # *
 		flag["strict"]	= True	if arg == "--strict" else flag["strict"]
+		if arg[:8] == "--codec:":
+			import codecs
+			codec = arg[8:]
+			try:
+				codecs.lookup(codec)
+			except LookupError:
+				sys.exit("Unknown codec \"%s\"."%codec)
+			else:
+				flag["codec"] = codec
 	return flag
 
 
@@ -94,16 +104,16 @@ def main():
 	if len(sys.argv) == 1:
 		# ? No arguments given.
 		data = input("Input a UTF-8 string to encode into DNA: > ")
-		flag = {"string": True, "decode": False, "strict": False}
+		flag = {"string": True, "decode": False, "strict": False, "codec": "utf_8"}
 	else:
 		data = sys.argv[1]
 		flag = flags()
 
 	if flag["string"]:
 		if flag["decode"]:
-			print(dna_to_str(clean(data, flag["strict"])))
+			print(dna_to_str(clean(data, flag["strict"]), flag["codec"]))
 		else:
-			print(str_to_dna(data))
+			print(str_to_dna(data, flag["codec"]))
 	else:
 		with open(data, "r") as file:
 			try:
@@ -111,9 +121,9 @@ def main():
 			except UnicodeDecodeError:
 				sys.exit("Invalid file encoding. Only UTF-8 is supported.")
 		if flag["decode"]:
-			print(dna_to_str(clean(data, flag["strict"])))
+			print(dna_to_str(clean(data, flag["strict"]), flag["codec"]))
 		else:
-			print(str_to_dna(data))
+			print(str_to_dna(data, flag["codec"]))
 
 if __name__ == "__main__":
 	sys.exit(main())
