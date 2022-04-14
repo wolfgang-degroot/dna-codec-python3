@@ -5,16 +5,17 @@
 ```bash
 dna-codec.py <input> <args>
 ```
-| Flag				| Description			| Default	|
-| -----------------	| ---------------------	| ---------	|
-| --encode			| *Encode*				| **Yes**	|
-| --decode			| *Decode*				| No		|
-| --codec:`<codec>`	| Which	encoder to use?	| `utf_8`	|
-| --string			| **Input a *string***	| **Yes**	|
-| --file			| Input a *file*		| No		|
-| --raw				| *Raw* input & output	| No		|
-| --strict			| Don't skip bad data	| No		|
-| --help			| Display some help		| No		|
+| Flag				| Description				| Default	|
+| -----------------	| -------------------------	| ---------	|
+| --encode			| *Encode*					| **Yes**	|
+| --columns:<int>	| Split result into columns	| No / *0*	|
+| --decode			| *Decode*					| No		|
+| --codec:`<codec>`	| Which	encoder to use?		| `utf_8`	|
+| --string			| **Input a *string***		| **Yes**	|
+| --file			| Input a *file*			| No		|
+| --raw				| *Raw* input & output		| No		|
+| --strict			| Don't skip bad data		| No		|
+| --help			| Display some help			| No		|
 
 ### Examples
 Encode a string:

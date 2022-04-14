@@ -4,7 +4,7 @@ import codecs
 import sys
 
 __author__ = "Wolfgang de Groot"
-__version__ = "1.3.0"
+__version__ = "1.4.0"
 __license__ = "MIT"
 
 # * Encoders
@@ -82,10 +82,26 @@ def clean(input: str, strict: bool = False) -> str:
 	output += "A" * (4 - len(output) % 4)
 	return output
 
+def column(dna: str, length: int = 0) -> str:
+	"""Loop through DNA and split into columns"""
+	if length == 0:
+		return dna
+	string = ""
+	loop = 0
+	for i in range(len(dna) - 3):
+		loop += 1
+		string += "" if loop <= 1 else " "
+		string += dna[i:i+4]
+		if loop == length:
+			string += "\n"
+			loop = 0
+	return string
+
 def help() -> None:
 	self = sys.argv[0]
 	print("Usage: %s <input> <args>"%self)
 	print("\t--encode --------- encode string to DNA [default]")
+	print("\t--columns:<int> -- split DNA into columns of <int> characters")
 	print("\t--decode --------- decode DNA to string")
 	print("\t--codec:<codec> -- Set which standard encoder to use")
 	print("\t--string --------- Use a string as input  [default]")
@@ -103,7 +119,8 @@ def flags(default: bool = False) -> tuple:
 		"decode":	False,
 		"source":	"string",
 		"strict":	False,
-		"codec":	"utf_8"
+		"codec":	"utf_8",
+		"columns":	0
 		}
 	if default:
 		return flag
@@ -117,6 +134,9 @@ def flags(default: bool = False) -> tuple:
 				sys.exit("Unknown codec \"%s\"."%codec)
 			else:
 				flag["codec"] = codec
+		if arg[:10] == "--columns:":
+			columns = arg[10:] if arg[10:].isdigit else False
+			flag["columns"] = max(int(columns), 0) if columns else 0
 		flag["decode"]	= True	if arg == "--decode" else flag["decode"]
 		flag["decode"]	= False	if arg == "--encode" else flag["decode"]  # *
 		flag["source"]	= "file"	if arg == "--file"	 else flag["source"]
@@ -141,7 +161,7 @@ def main():
 				sys.stdout.buffer.write(dna_to_bytes(data))
 			print(dna_to_str(clean(data, flag["strict"]), flag["codec"]))
 		else:
-			print(str_to_dna(data, flag["codec"]))
+			print(column(str_to_dna(data, flag["codec"]), flag["columns"]))
 	elif flag["source"] == "file":
 		if flag["decode"]:
 			with open(data, "r") as file:
@@ -159,7 +179,7 @@ def main():
 			if flag["codec"] == "raw":
 				out = bytes_to_dna(data)
 			else:
-				out = str_to_dna(data, flag["codec"])
+				out = column(str_to_dna(data, flag["codec"]), flag["columns"])
 			out = out.encode("utf-8")
 		sys.stdout.buffer.write(out)
 	else:
