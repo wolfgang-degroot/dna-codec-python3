@@ -3,7 +3,7 @@
 import sys
 
 __author__ = "Wolfgang de Groot"
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 __license__ = "MIT"
 
 # * Encoders
@@ -61,6 +61,7 @@ def help() -> None:
 	print("\t--file: ---- Use a file instead of a string")
 	print("\t--hex: ----- The data input is hexidecimal")
 	print("\t--strict: -- Do not pad the input if characters are missing")
+	print("\t--help: ---- Print this help message")
 	print("Example: %s \"Biology is actually my least favorite subject\" --encode --string"%self)
 	print("Example: %s input.txt --encode --file"%self)
 	print("Example: %s CAGACGCCCGTACGTACGTTAGAC --decode --string"%self)

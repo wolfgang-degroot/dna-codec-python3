@@ -13,6 +13,7 @@ dna-codec.py <input> <args>
 | --file	| Input a *file*		|	No		|
 | --hex		| Use hexidecimal data	|	No		|
 | --strict	| Don't fix bad data	|	No		|
+| --help	| Display some help		|	No		|
 
 ### Examples
 Encode a string:
