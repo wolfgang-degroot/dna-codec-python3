@@ -4,7 +4,7 @@ import codecs
 import sys
 
 __author__ = "Wolfgang de Groot"
-__version__ = "1.4.0"
+__version__ = "1.4.1"
 __license__ = "MIT"
 
 # * Encoders
@@ -75,8 +75,8 @@ def clean(input: str, strict: bool = False) -> str:
 	"""Cleans the input string for DNA decoding"""
 	output = ""
 	for char in input:
-		if char in "ACGT":
-			output += char
+		if char.upper() in "ACGT":
+			output += char.upper()
 		elif strict:
 			output += "A"
 	output += "A" * (4 - len(output) % 4)
