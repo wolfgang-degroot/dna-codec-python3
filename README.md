@@ -28,5 +28,6 @@ Decode a file:
 Encode a file and store the output:
 `dna-codec.py data.txt --encode --file > output.txt`
 
+----------------
 
 ```CGAGCTGCAGAACCCTCGTTCGTACGCGCGCTCGACCGTGCGCTAGAACGCACGCCAGAACACTCTAGCGTTCGTTCTCA```
