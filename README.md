@@ -11,7 +11,7 @@ dna-codec.py <input> <args>
 | --decode	| *Decode*				|	No		|
 | --string	| **Input a *string***	| **Yes**	|
 | --file	| Input a UTF-8 *file*	|	No		|
-| --strict	| Don't fix bad data	|	No		|
+| --strict	| Don't skip bad data	|	No		|
 | --help	| Display some help		|	No		|
 
 ### Examples

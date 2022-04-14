@@ -3,7 +3,7 @@
 import sys
 
 __author__ = "Wolfgang de Groot"
-__version__ = "1.0.5"
+__version__ = "1.1.0"
 __license__ = "MIT"
 
 # * Encoders
@@ -52,6 +52,18 @@ def dna_to_str(dna: str) -> str:
 
 # * Function
 
+def clean(input: str, strict: bool = False) -> str:
+	"""Cleans the input string for DNA decoding"""
+	output = ""
+	for char in input:
+		if char in "ACGT":
+			output += char
+		elif strict:
+			output += "A"
+	output += "A" * (4 - len(output) % 4)
+	print(output)
+	return output
+
 def help() -> None:
 	self = sys.argv[0]
 	print("Usage: %s <input> <args>"%self)
@@ -59,50 +71,49 @@ def help() -> None:
 	print("\t--decode: -- decode DNA to string")
 	print("\t--string: -- Use a string as input  [default]")
 	print("\t--file: ---- Use a file instead of a string")
-	print("\t--strict: -- Do not pad the input if characters are missing")
+	print("\t--strict: -- Pad invalid characters when decoding rather than skipping")
 	print("\t--help: ---- Print this help message")
 	print("Example: %s \"Biology is actually my least favorite subject\" --encode --string"%self)
 	print("Example: %s input.txt --encode --file"%self)
 	print("Example: %s CAGACGCCCGTACGTACGTTAGAC --decode --string"%self)
 
+def flags() -> tuple:
+	"""Returns a tuple of flags"""
+	flag = {"decode": False, "string": True, "strict": False}
+	for arg in sys.argv[1:]:
+		sys.exit(help()) if arg == "--help" else None
+		flag["decode"]	= True	if arg == "--decode" else flag["decode"]
+		flag["decode"]	= False	if arg == "--encode" else flag["decode"]  # *
+		flag["string"]	= False	if arg == "--file"	 else flag["string"]
+		flag["string"]	= True	if arg == "--string" else flag["string"]  # *
+		flag["strict"]	= True	if arg == "--strict" else flag["strict"]
+	return flag
+
 
 def main():
-	flag = {"decode": False, "string": True, "strict": False}
 	if len(sys.argv) == 1:
 		# ? No arguments given.
-		data = input("Input a string to encode into DNA: > ")
-		flag["string"] = True
-	elif len(sys.argv) == 2 and sys.argv[1] == "--help":
-		sys.exit(help())
+		data = input("Input a UTF-8 string to encode into DNA: > ")
+		flag = {"string": True, "decode": False, "strict": False}
 	else:
-		# ? Arguments given, and the first is not --help
+		flag = flags()
 		data = sys.argv[1]
-		for arg in sys.argv[2:]:
-			sys.exit(help()) if arg == "--help" else None
-			flag["decode"]	= True	if arg == "--decode" else flag["decode"]
-			flag["decode"]	= False	if arg == "--encode" else flag["decode"]  # *
-			flag["string"]	= False	if arg == "--file"	 else flag["string"]
-			flag["string"]	= True	if arg == "--string" else flag["string"]  # *
-			flag["strict"]	= True	if arg == "--strict" else flag["strict"]
 
-	# * Execution
 	if flag["string"]:
-		payload = data
+		if flag["decode"]:
+			print(dna_to_str(clean(data, flag["strict"])))
+		else:
+			print(str_to_dna(data))
 	else:
 		with open(data, "r") as file:
 			try:
-				payload = file.read()
+				data = file.read()
 			except UnicodeDecodeError:
 				sys.exit("Invalid file encoding. Only UTF-8 is supported.")
-	if flag["decode"]:
-		# ? Decoding
-		cleaned = "".join([i for i in payload if i in "ACGT"])
-		# ! Pad strings that are too short if --strict is not used
-		cleaned += "A" * (4 - len(cleaned) % 4) if not flag["strict"] else ""
-		print(dna_to_str(cleaned))
-	else:
-		# ? Encoding
-		print(str_to_dna(payload))
+		if flag["decode"]:
+			print(dna_to_str(clean(data, flag["strict"])))
+		else:
+			print(str_to_dna(data))
 
 if __name__ == "__main__":
 	sys.exit(main())
