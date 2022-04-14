@@ -3,7 +3,7 @@
 import sys
 
 __author__ = "Wolfgang de Groot"
-__version__ = "1.2.0"
+__version__ = "1.2.1"
 __license__ = "MIT"
 
 # * Encoders
@@ -78,9 +78,11 @@ def help() -> None:
 	print("Example: %s input.txt --encode --file"%self)
 	print("Example: %s CAGACGCCCGTACGTACGTTAGAC --decode --string"%self)
 
-def flags() -> tuple:
+def flags(default: bool = False) -> tuple:
 	"""Returns a tuple of flags"""
 	flag = {"decode": False, "string": True, "strict": False, "codec": "utf_8"}
+	if default:
+		return flag
 	for arg in sys.argv[1:]:
 		sys.exit(help()) if arg == "--help" else None
 		flag["decode"]	= True	if arg == "--decode" else flag["decode"]
@@ -104,7 +106,7 @@ def main():
 	if len(sys.argv) == 1:
 		# ? No arguments given.
 		data = input("Input a UTF-8 string to encode into DNA: > ")
-		flag = {"string": True, "decode": False, "strict": False, "codec": "utf_8"}
+		flag = flags(default=True)
 	else:
 		data = sys.argv[1]
 		flag = flags()
