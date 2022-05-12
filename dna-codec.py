@@ -4,7 +4,7 @@ import codecs
 import sys
 
 __author__ = "Wolfgang de Groot"
-__version__ = "1.4.1"
+__version__ = "1.4.2"
 __license__ = "MIT"
 
 # * Encoders
@@ -172,7 +172,7 @@ def main():
 			if flag["codec"] == "raw":
 				out = dna_to_bytes(data)
 			else:
-				out = dna_to_str(clean(data, flag["strict"]), flag["codec"])
+				out = bytes(dna_to_str(clean(data, flag["strict"]), flag["codec"]), flag["codec"])
 		else: # * Encode
 			with open(data, "rb") as file:
 				data = file.read()
@@ -180,7 +180,6 @@ def main():
 				out = bytes_to_dna(data)
 			else:
 				out = column(str_to_dna(data, flag["codec"]), flag["columns"])
-			out = out.encode("utf-8")
 		sys.stdout.buffer.write(out)
 	else:
 		with open(data, "rb") as file:
